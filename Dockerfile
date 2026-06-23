@@ -32,13 +32,10 @@ RUN mkdir -p /app/kelvin_data \
 # Copy application code
 COPY . .
 
-# Create volume for persistent data
-VOLUME ["/app/kelvin_data", "/app/kelvin_uploads", "/app/backups", "/app/logs"]
-
 # Expose port for Flask
 EXPOSE 8080
 
-# Set environment variables (ဒါတွေကို Railway/Platform ကနေ ထည့်ပေးရမယ်)
+# Set environment variables
 ENV PORT=8080
 
 # Run the bot
