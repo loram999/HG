@@ -1,0 +1,62 @@
+# Nixpacks Configuration File
+
+# Python version
+[phases.setup]
+nixPkgs = ["python310", "nodejs", "npm", "gcc", "g++", "make"]
+
+# Install Python dependencies
+[phases.install]
+cmds = [
+  "pip install --upgrade pip",
+  "pip install -r requirements.txt"
+]
+
+# Create necessary directories
+[phases.setup]
+cmds = [
+  "mkdir -p /app/kelvin_data",
+  "mkdir -p /app/kelvin_uploads",
+  "mkdir -p /app/backups",
+  "mkdir -p /app/logs",
+  "mkdir -p /app/temp"
+]
+
+# Start command
+[start]
+cmd = "python main.py"
+
+# Environment variables (Required)
+[variables]
+PORT = "8080"
+
+# Optional variables with defaults
+[variables]
+REDIS_URL = ""
+MONGODB_URI = ""
+WEBHOOK_URL = ""
+SMTP_SERVER = ""
+SMTP_PORT = ""
+SMTP_USERNAME = ""
+SMTP_PASSWORD = ""
+FROM_EMAIL = ""
+
+# Health check
+[healthcheck]
+path = "/health"
+interval = 30
+timeout = 10
+retries = 3
+
+# Cron jobs
+[crons]
+# Clean up old files every 6 hours
+cleanup = "0 */6 * * * python scripts/cleanup.py"
+# Backup database daily at 2 AM
+backup = "0 2 * * * python scripts/backup.py"
+# Check system health every hour
+health = "0 * * * * python scripts/health_check.py"
+
+# Resource limits
+[resources]
+memory = "512MB"
+cpu = "1000m"
